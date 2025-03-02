@@ -15,7 +15,7 @@ export type UserDocument = User & Document;
 })
 export class User {
   @Prop({ required: true })
-  name: string;
+  username: string;
 
   @Prop({ required: true, unique: true })
   email: string;
@@ -27,7 +27,13 @@ export class User {
   bio?: string;
 
   @Prop()
-  lastLogin?: Date;
+  birthDate: string;
+
+  @Prop()
+  gender: string;
+
+  @Prop()
+  name: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

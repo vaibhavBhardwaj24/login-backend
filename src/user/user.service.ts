@@ -29,15 +29,14 @@ export class UserService {
   ): Promise<User> {
     const { email } = updateProfileDto;
 
-    // Check if email is unique if it's being updated
-    if (email) {
-      const existingUser = await this.userModel
-        .findOne({ email, _id: { $ne: userId } })
-        .exec();
-      if (existingUser) {
-        throw new BadRequestException('Email already in use');
-      }
-    }
+    // if (email) {
+    //   const existingUser = await this.userModel
+    //     .findOne({ email, _id: { $ne: userId } })
+    //     .exec();
+    //   if (existingUser) {
+    //     throw new BadRequestException('Email already in use');
+    //   }
+    // }
 
     const updatedUser = await this.userModel
       .findByIdAndUpdate(userId, updateProfileDto, { new: true })
@@ -46,7 +45,7 @@ export class UserService {
     if (!updatedUser) {
       throw new NotFoundException('User not found');
     }
-
+    console.log(updatedUser);
     return updatedUser;
   }
 }

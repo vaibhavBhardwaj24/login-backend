@@ -18,7 +18,8 @@ export class AuthService {
   ) {}
 
   async signup(signupDto: SignupDto): Promise<{ token: string; user: User }> {
-    const { email, password, name } = signupDto;
+    const { email, password, name, username, bio, birthDate, gender } =
+      signupDto;
 
     const existingUser = await this.userModel.findOne({ email }).exec();
     if (existingUser) {
@@ -31,6 +32,10 @@ export class AuthService {
       name,
       email,
       password: hashedPassword,
+      username,
+      bio,
+      birthDate,
+      gender,
     });
 
     await newUser.save();
@@ -43,20 +48,16 @@ export class AuthService {
   async login(loginDto: LoginDto): Promise<{ token: string; user: User }> {
     const { email, password } = loginDto;
 
-    // Find user by email
     const user = await this.userModel.findOne({ email }).exec();
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    // Validate password
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    // Update last login
-    user.lastLogin = new Date();
     await user.save();
 
     // Generate JWT token
